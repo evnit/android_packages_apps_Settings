@@ -121,6 +121,12 @@
             settings:controller="com.android.settings.network.telephony.Enhanced4gAdvancedCallingPreferenceController"/>
 
         <com.havoc.support.preferences.SwitchPreference
+            android:key="enabled_5g"
+            android:title="@string/enabled_5g_mode_title"
+            android:persistent="true"
+            settings:controller="com.android.settings.network.telephony.Enabled5GPreferenceController"/>
+
+        <com.havoc.support.preferences.SwitchPreference
             android:key="contact_discovery_opt_in"
             android:title="@string/contact_discovery_opt_in_title"
             android:persistent="false"
@@ -176,7 +182,6 @@
                 android:title="@string/video_calling_settings_title"
                 android:persistent="true"
                 settings:controller="com.android.settings.network.telephony.VideoCallingPreferenceController"/>
-
         </PreferenceCategory>
 
         <com.android.settings.network.telephony.cdma.CdmaListPreference
