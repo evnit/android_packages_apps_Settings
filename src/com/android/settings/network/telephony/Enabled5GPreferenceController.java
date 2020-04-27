@@ -29,7 +29,10 @@
  */
 package com.android.settings.network.telephony;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,6 +45,7 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
+import com.android.internal.telephony.TelephonyIntents;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
 import com.android.settingslib.core.lifecycle.events.OnStop;
@@ -68,6 +72,15 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
     private ContentObserver mPreferredNetworkModeObserver;
     private ContentObserver mSubsidySettingsObserver;
 
+    private final BroadcastReceiver mDefaultDataChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mPreference != null) {
+                Log.d(TAG,"DDS is changed");
+                updateState(mPreference);
+            }
+        }
+    };
     public Enabled5GPreferenceController(Context context, String key) {
         super(context, key);
         mPreferredNetworkModeObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
@@ -119,12 +132,17 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
         mContext.getContentResolver().registerContentObserver(
                 Settings.Global.getUriFor(Settings.Global.PREFERRED_NETWORK_MODE + mSubId), true,
                 mPreferredNetworkModeObserver);
+        mContext.registerReceiver(mDefaultDataChangedReceiver,
+                new IntentFilter(TelephonyIntents.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED));
     }
 
     @Override
     public void onStop() {
         if (mPreferredNetworkModeObserver != null) {
             mContext.getContentResolver().unregisterContentObserver(mPreferredNetworkModeObserver);
+        }
+        if (mDefaultDataChangedReceiver != null) {
+            mContext.unregisterReceiver(mDefaultDataChangedReceiver);
         }
     }
 
