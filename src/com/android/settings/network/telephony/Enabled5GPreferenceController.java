@@ -110,6 +110,9 @@ public class Enabled5GPreferenceController extends TelephonyTogglePreferenceCont
     public int getAvailabilityStatus(int subId) {
         init(subId);
         final PersistableBundle carrierConfig = mCarrierConfigManager.getConfigForSubId(subId);
+        if (carrierConfig == null || mTelephonyManager == null) {
+            return CONDITIONALLY_UNAVAILABLE;
+        }
         int defaultDdsSubId = SubscriptionManager.getDefaultDataSubscriptionId();
         final boolean isDds = defaultDdsSubId == subId;
         final boolean is5gEnabledByCarrier = (mTelephonyManager.getAllowedNetworkTypes()
