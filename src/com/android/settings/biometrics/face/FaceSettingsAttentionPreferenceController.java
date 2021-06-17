@@ -26,6 +26,7 @@ import androidx.preference.PreferenceScreen;
 import com.havoc.support.preferences.SwitchPreference;
 
 import com.android.settings.Utils;
+import com.android.internal.util.custom.faceunlock.FaceUnlockUtils;
 
 /**
  * Preference controller that manages the ability to use face authentication with/without
@@ -123,6 +124,9 @@ public class FaceSettingsAttentionPreferenceController extends FaceSettingsPrefe
 
     @Override
     public int getAvailabilityStatus() {
+        if (FaceUnlockUtils.hasMotoFaceUnlock()){
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return AVAILABLE;
     }
 }

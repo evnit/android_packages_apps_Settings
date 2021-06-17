@@ -40,6 +40,7 @@ import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
 import com.android.settingslib.widget.LayoutPreference;
 
 import java.util.List;
+import com.android.internal.util.custom.faceunlock.FaceUnlockUtils;
 
 /**
  * Controller for the remove button. This assumes that there is only a single face enrolled. The UI
@@ -63,9 +64,13 @@ public class FaceSettingsRemoveButtonPreferenceController extends BasePreference
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            int remove_dialog_details_moto =
+                R.string.security_settings_face_settings_remove_dialog_details_moto;
 
             builder.setTitle(R.string.security_settings_face_settings_remove_dialog_title)
-                    .setMessage(R.string.security_settings_face_settings_remove_dialog_details)
+                    .setMessage(FaceUnlockUtils.hasMotoFaceUnlock() ?
+                        remove_dialog_details_moto :
+                        R.string.security_settings_face_settings_remove_dialog_details)
                     .setPositiveButton(R.string.delete, mOnClickListener)
                     .setNegativeButton(R.string.cancel, mOnClickListener);
             AlertDialog dialog = builder.create();
